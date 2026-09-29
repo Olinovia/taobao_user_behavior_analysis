@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+code_reproduction_md/
+.venv/
+venv/
+.pytest_cache/
+node_modules/
+.ipynb_checkpoints/
+.DS_Store
+data/UserBehavior.csv
+data/UserBehavior.csv.zip
+data/UserBehavior_real_head.csv
+data/*.zip
+.idea/
