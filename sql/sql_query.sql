@@ -16,7 +16,7 @@ CREATE TABLE user_behavior (
 )
 
 --2.读取csv文件(ctrl+h可以替换内容，有部分替换/全部替换)
-LOAD DATA LOCAL INFILE 'C:/Users/Administrator/Desktop/Taobao-User-Behavior-Conversion-Analysis-main/data/cleaned_user_behavior.csv'
+LOAD DATA LOCAL INFILE 'C:/Users/Administrator/Desktop/User-Behavior-Conversion-Analysis-main/data/cleaned_user_behavior.csv'
 INTO TABLE user_behavior 
 CHARACTER set utf8mb4
 FIELDS TERMINATED BY ','

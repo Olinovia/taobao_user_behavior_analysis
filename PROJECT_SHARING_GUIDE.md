@@ -56,8 +56,7 @@ notebooks/
 | `dashboard/visual_analysis_dashboard.html` | html可视化分析看板文件                               |
 | `dashboard/buiness_summary_report.md`      | md业务运营总结看板文件                               |
 | `dashboard/dashboard_preview_01.png`       | html看板预览图                                       |
-| `tests/`                                   | 基础测试，展示工程化和口径校验意识                   |
-| `notebooks/01_data_cleaning_eda.ipynb`     | Notebook 版清洗和 EDA 流程                           |
+| `notebooks/visual_chart.ipynb`             | 可视化分析结果和看板图表文件                         |
 
 ## 三、发给 HR 或非技术人员
 
@@ -69,7 +68,7 @@ notebooks/
 README.md
 dashboard/visual_analysis_dashboard.html
 dashboard/buiness_summary_report.md
-dashboard/dashboard_preview.png
+dashboard/image.png
 reports/business_insights.md
 reports/analysis_conclusion.md
 reports/data_quality.md
@@ -89,17 +88,17 @@ README.md
 PROJECT_SHARING_GUIDE.md
 requirements.txt
 .gitignore
-src/
-sql/
+ai_Q&A/
+ai_Q&A_knowledge/
+dashboard/
+Screenshots/
 data/README.md
 data/raw_user_behavior.csv
 data/cleaned_user_behavior.csv
-reports/
-dashboard/
-tests/
+sql/
 notebooks/
-screenshots/
-dify_knowledge/
+src/
+reports/
 ```
 
 上传前确认：
@@ -108,7 +107,7 @@ dify_knowledge/
 - `reports/analysis_conclusion.md`、`reports/business_insights.md`、`reports/data_quality.md` 都是中文。
 - `dashboard/visual_analysis_dashboard.html` 可以打开。
 - `python -m pytest` 能通过。
-- 不要把完整原始大文件传上去。
+- 不要把完整原始数据zip大文件传上去。
 
 ## 五、不应该发送或上传的内容
 
@@ -124,7 +123,6 @@ data/UserBehavior.csv
 data/UserBehavior.csv.zip
 data/*.zip
 *.pyc
-.DS_Store
 ```
 
 原因：
@@ -132,7 +130,7 @@ data/*.zip
 - `.venv/`、`node_modules/` 体积大，且可通过依赖重新安装。
 - `code_reproduction_md/` 是相关代码群的代码复现文件，不用上传。
 - `__pycache__/`、`*.pyc` 是运行缓存文件，没有展示价值。
-- `data/UserBehavior.csv` 和 zip 原始数据体积太大，不适合上传。
+- `data/UserBehavior.csv`和`data/UserBehavior.csv.zip` 原始数据包体积太大，不适合上传。
 - 项目已经包含 `raw_user_behavior.csv` 和 `cleaned_user_behavior.csv`，足够展示和复现。
 
 ## 六、建议压缩包名称
@@ -140,13 +138,13 @@ data/*.zip
 如果需要发压缩包，建议命名为：
 
 ```text
-Taobao-User-Behavior-Analysis-Portfolio.zip
+User-Behavior-Analysis-Portfolio.zip
 ```
 
 或者中文：
 
 ```text
-淘宝用户行为分析项目_作品集.zip
+用户行为分析项目_作品集.zip
 ```
 
 ## 七、邮件或消息发送模板

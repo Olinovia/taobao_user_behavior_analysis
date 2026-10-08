@@ -5,10 +5,10 @@
 ## 项目亮点
 
 - **真实公开样本**：基于淘宝 UserBehavior 公开数据集抽取 100,000 行真实用户行为记录，清洗后保留 99,956 条有效记录，适合作为 GitHub 可复现的数据分析作品集样本。
-- **完整分析链路**：覆盖 Python / Pandas 数据清洗、数据质量检查、PostgreSQL SQL 分析、Markdown 报告生成和 Excel 看板展示，呈现从原始数据到业务结论的完整流程。
+- **完整分析链路**：覆盖 Python / Pandas 数据清洗、数据质量检查、PostgreSQL SQL 分析、Markdown 报告生成和 html 看板展示，呈现从原始数据到业务结论的完整流程。
 - **双口径转化漏斗**：同时构建用户级转化漏斗，以及更严格的用户-商品级顺序转化漏斗，区分“用户是否购买过”和“同一商品路径是否完成转化”。
 - **运营分析场景明确**：围绕不同用户行为分层情况和小时行为高峰，在时间维度上识别核心用户，拆解行为峰值，输出可用于再营销、留存运营和品类运营的分析建议。
-- **能力展示清晰**：项目可体现 Python 数据处理、SQL 指标分析、转化口径拆解、业务洞察表达和 Excel 可视化看板能力，适合数据分析、数据运营、产品运营和 AI 产品测试实习岗位展示。
+- **能力展示清晰**：项目可体现 Python 数据处理、SQL 指标分析、转化口径拆解、业务洞察表达和 html 可视化看板能力，适合数据分析、数据运营、产品运营和 AI 产品测试实习岗位展示。
 
 ## 项目概览
 
@@ -79,9 +79,9 @@
 user_behavior_analysis/
 ├── dashboard/
 |   └── dashboard_design.md
-│   ├── business_summary_report.md     #业务运营总结报告
-│   ├── visual_analysis_dashboard.html #可视化看板分析报告
-|   └── image.png                      #看板预览图
+│   ├── business_summary_report.md     # 业务运营总结报告
+│   ├── visual_analysis_dashboard.html # 可视化看板分析报告
+|   └── image.png                      # html看板预览图
 ├── data/
 |   └── README.md
 │   ├── cleaned_user_behavior.csv      # 清洗后的用户行为数据
@@ -97,7 +97,9 @@ user_behavior_analysis/
 |   └── README.md
 |   └── upload_checklist.md            # ai问答助手配置相关清单
 |   `── project_README.md
-├── figures/                            # 展示看板图表
+|   `── sql_README.md
+|   `── ....
+├── figures/                           # 展示看板所需图表
 |   └── behavior_distribution.png
 |   └── trend.png
 |   └── top_categories_purchase.png
@@ -119,9 +121,9 @@ user_behavior_analysis/
 │   ├── data_cleaning.py               # 数据清洗模块脚本
 │   └── data_dashboard.py              # 项目显示看板报告脚本
 │   └── detailed_analysis.py           # 项目具体报告脚本
-├── README.md                          #项目说明文档
-├── PROJECT_SHARING_GUIDE.md
-├── requirements.txt                   #项目配置文件
+├── README.md                          # 项目说明文档
+├── PROJECT_SHARING_GUIDE.md           # 文件上传指导文档
+├── requirements.txt                   #项目配置文档
 ```
 
 ## 数据清洗流程
@@ -176,7 +178,7 @@ user_behavior_analysis/
 - **用户-商品级顺序转化率的含义**：用户-商品级顺序转化率以 `user_id + item_id` 为分析对象，并要求同一用户对同一商品按时间顺序从浏览或加购走向购买，口径更严格，更接近具体商品路径转化。
 - **为什么两个指标要同时展示**：用户级指标有助于理解人群整体购买覆盖，用户-商品级顺序指标有助于评估具体商品路径效率。两个转化率一起展示，可以避免只看单一高转化率而误判业务表现。
 - **用户分层解释**：按照每个用户购买次数、活跃天数、购买品类数量分层，按优先级从高到低分层，覆盖完整用户行为链路。
-  - **core_user、buy_user、willing_user、browsing_user**
+  - 四类用户价值分层(**core_user、buy_user、willing_user、browsing_user**)
 - **时间维度分析**：UTC转Asia/Shanghai保留有效时间前提下，按照字段`hour`、`day_type`划分，分析用户行为习惯和品类运营周期。
   - 4个不同时段(**00-06点/06-12点/12-18点/18-00点**)
   - 2个不同周中日期(**weekday/weekend**)
@@ -258,7 +260,7 @@ Dify Web App：[https://udify.app/chat/0nIFW08DLfoL8IzA](https://udify.app/chat/
 - 核心指标口径，尤其是用户级转化率与用户-商品级顺序转化率的区别。
 - SQL 分析覆盖范围、CTE 和窗口函数使用场景。
 - 业务洞察、运营动作和验证指标。
-- html 看板设计思路和展示重点。
+- html 看板、md 看板设计思路和展示重点。
 
 实现原理：这是一个 RAG 问答助手，不是微调模型，也不是训练大模型，更不是实时读取 CSV 重新分析。配置流程是先上传项目文档，Dify 对文档分块，并使用 embedding 模型建立语义索引；用户提问时先检索相关文档片段，再由大模型结合检索结果和系统提示词生成回答。开启 Citation / Attribution 后，可以展示回答来源。
 
