@@ -23,7 +23,7 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]  
 
-DEFAULT_INPUT = PROJECT_ROOT / "data" / "raw_user_behavior_sample.csv"
+DEFAULT_INPUT = PROJECT_ROOT / "data" / "raw_user_behavior.csv"
 
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "cleaned_user_behavior.csv"
 
