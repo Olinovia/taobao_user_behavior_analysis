@@ -484,7 +484,10 @@ def activity_purchasing_segment_user(df:pd.DataFrame) -> pd.DataFrame:
 
     user_profile['segment_user'] = np.select(conditions, choices, default='browsing_user')
 
-    return pd.DataFrame(user_profile['segment_user'])
+    segment_summary = user_profile.groupby('segment_user').size().reset_index(name='user_count')
+    segment_summary['user_ratio'] = (segment_summary['user_count'] / len(user_profile)).round(4)
+
+    return segment_summary
 
 
 #8.pv_buy转换率和决策周期
@@ -564,7 +567,7 @@ def repurchase_cycle(df:pd.DataFrame) -> dict[str,object]:
 def purchase_category_combos(df:pd.DataFrame,top_n:int = 10) -> pd.DataFrame:
     df['day_type'] = df['weekname'].apply(lambda x: 'weekend' if int(x) >= 6 else 'weekday')
 
-    user_categories = df[df['behavior_type'] == 'buy'].groupby('user_id')['category_id'].apply(set)   #.apply(set)意思是变成set集合哈 🐮
+    user_categories = df[df['behavior_type'] == 'buy'].groupby('user_id')['category_id'].apply(set)
 
     # 类目关联分析:购物篮分析--找出经常被同一用户一起购买的类品组合
     from itertools import combinations  
@@ -617,7 +620,7 @@ def main() ->None:
     print_section('High Value Users',high_value_users(df))
     print_section('User Segmentation',user_segmentation(df))
 
-    print_section('Behavior Bwtween Weekday and Weekend',comparison_between_weekday_and_weekend(df))
+    print_section('comparison_between_weekday_and_weekend',comparison_between_weekday_and_weekend(df))
     print_section('Hour Activity Comparison Within Week',hour_activity_comparison_within_week(df))
     print_section('Funnel Comparison Within Week',distribution_of_behavior_within_week(df))
     print_section('User Behavior in different Time solt',user_tag_period(df))
