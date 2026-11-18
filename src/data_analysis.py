@@ -17,6 +17,7 @@ data_analysis.py
     - cart_without_purchase_users
     - high_value_users
     - user_segmentation
+    - purchase_segment_summary
         
     - comparison_between_weekday_and_weekend
     - hour_activity_comparison_within_week
@@ -190,7 +191,7 @@ def hourly_activity(df:pd.DataFrame) -> pd.DataFrame:
     return df.groupby(['hour','behavior_type']).size().reset_index(name='behavior_count')
 
 
-#9.统计各品类的用户行为+用户留存
+#9.统计top10 购买行为/人数的品类
 def top_categories_by_purchase(df:pd.DataFrame,top_n: int = 10) -> pd.DataFrame:
     buy_df = df[df['behavior_type'] == 'buy']
     return (
@@ -204,7 +205,7 @@ def top_categories_by_purchase(df:pd.DataFrame,top_n: int = 10) -> pd.DataFrame:
     )
 
 
-#10.各品类用户购买转化率+品类策略效果
+#10.top 购买&转化&浏览的品类
 def category_conversion_analysis(df:pd.DataFrame,top_n : int = 20,min_pv:int = 30) ->pd.DataFrame:
     category_behavior = (
         df.pivot_table(
@@ -345,6 +346,31 @@ def user_segmentation(df:pd.DataFrame) -> pd.DataFrame:
         .sort_values(['behavior_depth','purchase_segment'])
     )
 
+#不同购买次数用户的购买贡献层级(15.
+def purchase_segment_summary(df: pd.DataFrame) -> pd.DataFrame:
+    user_buy = df.groupby('user_id').agg(
+        buy_count=('behavior_type', lambda x: (x == 'buy').sum())
+    ).reset_index()
+
+    user_buy['purchase_segment'] = pd.cut(
+        user_buy['buy_count'],
+        bins=[-1, 0, 1, 3, float('inf')],
+        labels=['no_purchase', 'one_purchase', 'two_to_three', 'four_plus']
+    )
+
+    summary = user_buy.groupby('purchase_segment', observed=False).agg(
+        user_count=('user_id', 'count'),
+        total_buy_count=('buy_count', 'sum')
+    ).reset_index()
+
+    total_users = summary['user_count'].sum()
+    total_buys = summary['total_buy_count'].sum()
+
+    summary['user_ratio'] = (summary['user_count'] / total_users).round(4)
+    summary['buy_ratio'] = (summary['total_buy_count'] / total_buys).round(4)
+
+    return summary
+
 #1.工作日和周末的总体平均行为量对比
 def comparison_between_weekday_and_weekend(df:pd.DataFrame) -> pd.DataFrame:
     df['day_type'] = df['weekname'].apply(lambda x: 'weekend' if int(x) >= 6 else 'weekday')
@@ -484,10 +510,22 @@ def activity_purchasing_segment_user(df:pd.DataFrame) -> pd.DataFrame:
 
     user_profile['segment_user'] = np.select(conditions, choices, default='browsing_user')
 
-    segment_summary = user_profile.groupby('segment_user').size().reset_index(name='user_count')
+    segment_summary = user_profile.groupby('segment_user').agg(
+        user_count=('user_id', 'count'),
+        avg_buy_count=('buy_count', 'mean'),
+        avg_active_days=('active_days', 'mean'),
+        total_buy_count=('buy_count', 'sum')
+    ).reset_index()
+
     segment_summary['user_ratio'] = (segment_summary['user_count'] / len(user_profile)).round(4)
+    segment_summary['avg_buy_count'] = segment_summary['avg_buy_count'].round(3)
+    segment_summary['avg_active_days'] = segment_summary['avg_active_days'].round(3)
+    order = ['core_user', 'buy_user', 'willing_user', 'browsing_user']
+    segment_summary['segment_user'] = pd.Categorical(segment_summary['segment_user'], categories=order, ordered=True)
+    segment_summary = segment_summary.sort_values('segment_user').reset_index(drop=True)
 
     return segment_summary
+
 
 
 #8.pv_buy转换率和决策周期
@@ -619,6 +657,7 @@ def main() ->None:
     print_section('Cart Without Purchase Users',cart_without_purchase_users(df))
     print_section('High Value Users',high_value_users(df))
     print_section('User Segmentation',user_segmentation(df))
+    print_section('purchase_segment_summary',purchase_segment_summary(df))
 
     print_section('comparison_between_weekday_and_weekend',comparison_between_weekday_and_weekend(df))
     print_section('Hour Activity Comparison Within Week',hour_activity_comparison_within_week(df))
